@@ -1,11 +1,10 @@
 -- Testing a quick 3D engine
 -- by Terry Hearst
 
-local camera = {}
-local vertices = {}
-local edges = {}
-
-local config = {}
+camera = {}
+vertices = {}
+edges = {}
+config = {}
 
 function love.load()
 	-- Init config
@@ -18,8 +17,9 @@ function love.load()
 	camera.x = 0
 	camera.y = 0
 	camera.z = -3
-	camera.ang = 0
+	
 	camera.pitch = 0
+	camera.yaw = 0
 	
 	-- Init vertices {x, y, z}
 	vertices[1]  = { 1,  1,  1}
@@ -132,21 +132,21 @@ function love.update(dt)
 	
 	-- Move camera
 	if love.keyboard.isDown("w") then
-		camera.z = camera.z + (scl * dt * math.cos(camera.ang))
-		camera.x = camera.x + (scl * dt * math.sin(camera.ang))
+		camera.z = camera.z + (scl * dt * math.cos(camera.yaw))
+		camera.x = camera.x + (scl * dt * math.sin(camera.yaw))
 	end
 	if love.keyboard.isDown("s") then
-		camera.z = camera.z - (scl * dt * math.cos(camera.ang))
-		camera.x = camera.x - (scl * dt * math.sin(camera.ang))
+		camera.z = camera.z - (scl * dt * math.cos(camera.yaw))
+		camera.x = camera.x - (scl * dt * math.sin(camera.yaw))
 	end
 	
 	if love.keyboard.isDown("d") then
-		camera.x = camera.x + (scl * dt * math.cos(-camera.ang))
-		camera.z = camera.z + (scl * dt * math.sin(-camera.ang))
+		camera.x = camera.x + (scl * dt * math.cos(-camera.yaw))
+		camera.z = camera.z + (scl * dt * math.sin(-camera.yaw))
 	end
 	if love.keyboard.isDown("a") then
-		camera.x = camera.x - (scl * dt * math.cos(-camera.ang))
-		camera.z = camera.z - (scl * dt * math.sin(-camera.ang))
+		camera.x = camera.x - (scl * dt * math.cos(-camera.yaw))
+		camera.z = camera.z - (scl * dt * math.sin(-camera.yaw))
 	end
 	
 	if love.keyboard.isDown("space") then
@@ -158,17 +158,18 @@ function love.update(dt)
 	
 	-- Rotate camera
 	if love.keyboard.isDown("right") then
-		camera.ang = camera.ang + dt * math.pi
-		if camera.ang >= 2 * math.pi then
-			camera.ang = camera.ang - 2 * math.pi
+		camera.yaw = camera.yaw + dt * math.pi
+		if camera.yaw >= 2 * math.pi then
+			camera.yaw = camera.yaw - 2 * math.pi
 		end
 	end
 	if love.keyboard.isDown("left") then
-		camera.ang = camera.ang - dt * math.pi
-		if camera.ang < 0 then
-			camera.ang = camera.ang + 2 * math.pi
+		camera.yaw = camera.yaw - dt * math.pi
+		if camera.yaw < 0 then
+			camera.yaw = camera.yaw + 2 * math.pi
 		end
 	end
+	
 	if love.keyboard.isDown("up") then
 		camera.pitch = camera.pitch + dt * math.pi
 		if camera.pitch >= math.pi / 2 then
@@ -196,8 +197,9 @@ function love.keypressed(key, scancode, isrepeat)
 		camera.x = 0
 		camera.y = 0
 		camera.z = -3
-		camera.ang = 0
+		
 		camera.pitch = 0
+		camera.yaw = 0
 	end
 end
 
@@ -218,7 +220,7 @@ function love.draw()
 		cx = camera.x *  25 + 75
 		cy = camera.z * -25 + 75
 		love.graphics.circle("line", cx, cy, 4)
-		love.graphics.line(cx, cy, cx + 16*math.sin(camera.ang), cy - 16*math.cos(camera.ang))
+		love.graphics.line(cx, cy, cx + 16*math.sin(camera.yaw), cy - 16*math.cos(camera.yaw))
 	end
 
 	love.graphics.push()
@@ -313,7 +315,7 @@ function transformToCamera(v)
 	local radius, angle
 	radius = math.sqrt((v.x ^ 2) + (v.z ^ 2))
 	angle = (math.pi / 2) - math.atan2(v.z, v.x)
-	angle = angle - camera.ang
+	angle = angle - camera.yaw
 	v.x = radius * math.sin(angle)
 	v.z = radius * math.cos(angle)
 	
@@ -323,8 +325,6 @@ function transformToCamera(v)
 	angle = angle - camera.pitch
 	v.y = radius * math.sin(angle)
 	v.z = radius * math.cos(angle)
-	
-	--return v
 end
 
 function project3Dto2D(v)
