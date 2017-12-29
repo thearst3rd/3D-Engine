@@ -1,8 +1,8 @@
-# 3D Engine in Love2D
+# 3D Wireframe Engine in Love2D
 
 A little engine I made for fun to learn about perspective calculations. I thought it would be a fun little challenge making a 3D program with a game engine which only supports 2D. Nothing in here is optimized and I am taking the lazy route for most of the work. It works, though.
 
-Right now, I have hard-coded the coordinates of a regular dodecahedron.
+Right now, I have hard-coded the coordinates of a regular dodecahedron. **If you want a version that supports loading 3D models, check out the** `model-parser` **branch in this repository! It's a work in progress.**
 
 ### Controls
 
