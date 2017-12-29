@@ -7,7 +7,7 @@ local edges = {}
 
 local config = {}
 
-require "parseModel"
+require "FFI/parseModel"
 
 function love.load()
 	-- Init config
@@ -24,7 +24,7 @@ function love.load()
 	camera.pitch = 0
 	
 	-- Init 3D Model
-	local filename = --[[arg[2] or]] "models/dodecahedron.hthwr"
+	local filename = arg[2] and (arg[1] .. "/" .. arg[2]) or (arg[1] .. "/models/dodecahedron.hthwr")
 	
 	vertices, edges = parseModel(filename)
 end
