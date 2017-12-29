@@ -20,6 +20,7 @@ function love.load()
 	
 	camera.pitch = 0
 	camera.yaw = 0
+	camera.roll = 0
 	
 	-- Init vertices {x, y, z}
 	vertices[1]  = { 1,  1,  1}
@@ -182,6 +183,19 @@ function love.update(dt)
 			camera.pitch = -math.pi / 2
 		end
 	end
+	
+	if love.keyboard.isDown("o") then
+		camera.roll = camera.roll - dt * math.pi
+		if camera.roll < -math.pi / 2 then
+			camera.roll = -math.pi / 2
+		end
+	end
+	if love.keyboard.isDown("p") then
+		camera.roll = camera.roll + dt * math.pi
+		if camera.roll > math.pi / 2 then
+			camera.roll = math.pi / 2
+		end
+	end
 end
 
 function love.keypressed(key, scancode, isrepeat)
@@ -200,6 +214,7 @@ function love.keypressed(key, scancode, isrepeat)
 		
 		camera.pitch = 0
 		camera.yaw = 0
+		camera.roll = 0
 	end
 end
 
@@ -325,6 +340,13 @@ function transformToCamera(v)
 	angle = angle - camera.pitch
 	v.y = radius * math.sin(angle)
 	v.z = radius * math.cos(angle)
+	
+	-- Roll
+	radius = math.sqrt((v.y ^ 2) + (v.x ^ 2))
+	angle = (math.pi / 2) - math.atan2(v.y, v.x)
+	angle = angle - camera.roll
+	v.x = radius * math.sin(angle)
+	v.y = radius * math.cos(angle)
 end
 
 function project3Dto2D(v)
